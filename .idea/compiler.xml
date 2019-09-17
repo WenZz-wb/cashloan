@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="zuul" />
+        <module name="loan-biz" />
+        <module name="eureka" />
+        <module name="loan-pay" />
+        <module name="cashloan" />
+        <module name="app-loan" />
+        <module name="magic" />
+        <module name="user-loan" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="app-loan" options="-parameters" />
+      <module name="eureka" options="-parameters" />
+      <module name="loan-biz" options="-parameters" />
+      <module name="loan-pay" options="-parameters" />
+      <module name="magic" options="-parameters" />
+      <module name="user-loan" options="-parameters" />
+      <module name="zuul" options="-parameters" />
+    </option>
+  </component>
+</project>

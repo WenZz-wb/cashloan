@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head th:include="layout :: htmlhead" th:with="title='用户管理'"></head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+
+
+    <!--头-->
+    <div th:replace="fragments/head :: header"></div>
+
+    <div class="layui-body" style="margin: 1%">
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+            <ul class="layui-tab-title">
+                <li class="layui-this">审批信息</li>
+                <li>审批通过信息</li>
+                <li>审批失败信息</li>
+            </ul>
+            <div class="layui-tab-content" style="height: 100px;">
+                <div class="layui-tab-item layui-show">
+
+
+        <form id="LoanSearch" class="layui-form layui-form-pane" method="post" action="" style="margin-top: 20px;">
+             <span class="layui-breadcrumb">
+                     <a href="/home">后台管理系统</a>
+                     <a href="/loan/information">基本设置</a>
+                     <a><cite>贷款管理</cite></a>
+              </span>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">用户名</label>
+                <div class="layui-input-inline">
+                    <input id="sysLoanName" name="loanName" autocomplete="off" class="layui-input" type="text"/>
+                </div>
+                <label class="layui-form-label">手机号</label>
+                <div class="layui-input-inline">
+                    <input id="sysLoanPhone" name="loanPhone" autocomplete="off" class="layui-input" type="text"
+                           onkeyup="this.value=this.value.replace(/\D/g,'')"
+                           onafterpaste="this.value=this.value.replace(/\D/g,'')"/>
+                </div>
+                <label class="layui-form-label">贷款类型</label>
+                <div class="layui-input-inline">
+                    <select name="loanType" id="loanTypexx">
+                        <option value="" selected="">请选择信用类型</option>
+                        <option value="个人信用">个人信用</option>
+                        <option value="商业信用">商业信用</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">登记时间</label>
+                    <div class="layui-input-inline" style="width: 175px;">
+                        <input name="startTime" id="startTime" placeholder="yyyy-MM-dd" autocomplete="off"
+                               class="layui-input" type="text"/>
+                    </div>
+                    <div class="layui-form-mid">-</div>
+                    <div class="layui-input-inline" style="width: 175px;">
+                        <input name="endTime" id="endTime" placeholder="yyyy-MM-dd" autocomplete="off"
+                               class="layui-input" type="text"/>
+                    </div>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    <button class="layui-btn" lay-submit="" lay-filter="searchSubmit">提交</button>
+                    <button class="layui-btn btn-add btn-default" id="btn-refresh">刷新</button>
+                </div>
+            </div>
+        </form>
+
+        <!--<hr class="layui-bg-blue"/>-->
+        <hr class="layui-bg-black"/>
+
+        <button class="layui-btn layui-btn-normal" onclick="addLoan()">新增贷款信息</button>
+
+        <div style="display:none;" id="currentLoan">
+            <shiro:principal property="id"></shiro:principal>
+        </div>
+
+        <table id="loanList" lay-filter="loanTable"></table>
+
+        <script type="text/html" id="optBar">
+            <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+        </script>
+               </div>
+                <div class="layui-tab-item">内容2</div>
+                <div class="layui-tab-item">内容3</div>
+    </div>
+
+        </div>
+    </div>
+
+    <!--添加或编辑用户-->
+    <div id="setLoan" class="layer_self_wrap" style="width:500px;display:none;">
+        <form id="loanForm" class="layui-form layui-form-pane" method="post" action="" style="margin-top: 20px;">
+            <input id="pageNum" type="hidden" name="pageNum"/>
+            <input id="id" type="hidden" name="id"/>
+            <div class="layui-form-item">
+                <label class="layui-form-label">姓名</label>
+                <div class="layui-input-inline">
+                    <input id="loanName" name="loanName" lay-verify="required" autocomplete="off" class="layui-input"
+                           type="text"/>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">申请日期</label>
+                    <div class="layui-input-inline" style="width: 175px;">
+                        <input type="text" class="layui-input" name="loanApplication" id="loanApplication"
+                               placeholder="yyyy-MM-dd" autocomplete="off">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">手机号</label>
+                <div class="layui-input-inline">
+                    <input id="loanPhone" name="loanPhone" lay-verify="required" autocomplete="off" class="layui-input"
+                           type="text"/>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">申请额度</label>
+                <div class="layui-input-inline">
+                    <input id="loanQuota" name="loanQuota" autocomplete="off" class="layui-input" type="text"
+                           placeholder="默认额度：5000"/>
+                </div>
+                <div class="layui-form-mid layui-word-aux">请填写10的倍数</div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">还款方式</label>
+                <div class="layui-input-inline">
+                    <select name="loanRepayment" id="loanRepayment" lay-verify="required" autocomplete="off">
+                        <option value="" selected="">请选择还款方式</option>
+                        <option value="等本等息">等本等息</option>
+                        <option value="先息后本">先息后本</option>
+                        <option value="一次性还款">一次性还款</option>
+                        <option value="等额本金">等额本金</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">借款期限（月）</label>
+                <div class="layui-input-inline">
+                    <select name="loanTerm" id="loanTerm" lay-verify="required" autocomplete="off">
+                        <option value="" selected="">请选择借款期限</option>
+                        <option value="1">1</option>
+                        <option value="3">3</option>
+                        <option value="6">6</option>
+                        <option value="12">12</option>
+                        <option value="24">24</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">贷款类型</label>
+                <div class="layui-input-inline">
+                    <select name="loanType" id="loanType" lay-verify="required" autocomplete="off">
+                        <option value="" selected="">请选择贷款类型</option>
+                        <option value="个人信用">个人信用</option>
+                        <option value="商业信用">商业信用</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">状态</label>
+                <div class="layui-input-inline">
+                    <select name="loanState" id="loanState" lay-verify="required" autocomplete="off">
+                        <option value="" selected="">请选择状态</option>
+                        <option value="未审批">未审批</option>
+                        <option value="审批失败">审批失败</option>
+                        <option value="初审中">初审中</option>
+                        <option value="复审中">复审中</option>
+                        <option value="初审通过">初审通过</option>
+                        <option value="复审通过">复审通过</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">初审时间</label>
+                    <div class="layui-input-inline" style="width: 175px;">
+                        <input type="text" class="layui-input" name="loanPreliminary" id="loanPreliminary"
+                               placeholder="yyyy-MM-dd" autocomplete="off">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">复审时间</label>
+                    <div class="layui-input-inline" style="width: 175px;">
+                        <input type="text" class="layui-input" name="loanReview" id="loanReview"
+                               placeholder="yyyy-MM-dd" autocomplete="off">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">初审人员</label>
+                <div class="layui-input-inline">
+                    <input id="preliminaryPersonnel" name="preliminaryPersonnel" class="layui-input" type="text"/>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">复审人员</label>
+                <div class="layui-input-inline">
+                    <input id="reviewPersonnel" name="reviewPersonnel" class="layui-input" type="text"/>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block" style="margin-left: 10px;">
+                    <button class="layui-btn" lay-submit="" lay-filter="loanSubmit">提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!--底部-->
+    <div th:replace="fragments/footer :: footer"></div>
+    <script src="/js/dateUtils.js"></script>
+    <script src="/js/loan/information.js"></script>
+
+</div>
+</body>
+</html>

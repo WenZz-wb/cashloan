@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hz.manager.dao.BaseAdminLoanMapper">
+
+
+    <resultMap id="BaseResultMap" type="com.hz.manager.model.Loan">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="loan_id" jdbcType="INTEGER" property="loanID"/>
+        <result column="loan_name" jdbcType="VARCHAR" property="loanName"/>
+        <result column="loan_date_application" jdbcType="DATE" property="loanApplication"/>
+        <result column="loan_phone" jdbcType="VARCHAR" property="loanPhone"/>
+        <result column="loan_quota" jdbcType="VARCHAR" property="loanQuota"/>
+        <result column="loan_repayment" jdbcType="VARCHAR" property="loanRepayment"/>
+        <result column="loan_term" jdbcType="VARCHAR" property="loanTerm"/>
+        <result column="loan_type" jdbcType="VARCHAR" property="loanType"/>
+        <result column="loan_state" jdbcType="VARCHAR" property="loanState"/>
+        <result column="loan_preliminary_date" jdbcType="VARCHAR" property="loanPreliminary"/>
+        <result column="loan_review_date" jdbcType="VARCHAR" property="loanReview"/>
+        <result column="loan_preliminary_personnel" jdbcType="VARCHAR" property="preliminaryPersonnel"/>
+        <result column="loan_review_personnel" jdbcType="VARCHAR" property="reviewPersonnel"/>
+    </resultMap>
+
+    <insert id="addLoan" parameterType="com.hz.manager.model.Loan">
+        INSERT INTO base_admin_loan
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="loanID!=null and loanID!='' ">loan_id,</if>
+            <if test="loanName!=null and loanID!='' ">loan_name,</if>
+            <if test="loanApplication!=null and loanID!='' ">loan_date_application,</if>
+            <if test="loanPhone!=null and loanID!='' ">loan_phone,</if>
+            <if test="loanQuota!=null and loanID!='' ">loan_quota,</if>
+            <if test="loanRepayment!=null and loanID!='' ">loan_repayment,</if>
+            <if test="loanTerm!=null and loanID!='' ">loan_term,</if>
+            <if test="loanType!=null and loanID!='' ">loan_type,</if>
+            <if test="loanState!=null and loanID!='' ">loan_state,</if>
+            <if test="loanPreliminary!=null and loanID!='' ">loan_preliminary_date,</if>
+            <if test="loanReview!=null and loanID!='' ">loan_review_date,</if>
+            <if test="preliminaryPersonnel!=null and loanID!='' ">loan_preliminary_personnel,</if>
+            <if test="reviewPersonnel!=null and loanID!='' ">loan_review_personnel,</if>
+        </trim>
+       VALUES
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="loanID!=null and loanID!='' ">#{loanID},</if>
+            <if test="loanName!=null and loanID!='' ">#{loanName},</if>
+            <if test="loanApplication!=null and loanID!='' ">#{loanApplication},</if>
+            <if test="loanPhone!=null and loanID!='' ">#{loanPhone},</if>
+            <if test="loanQuota!=null and loanID!='' ">#{loanQuota},</if>
+            <if test="loanRepayment!=null and loanID!='' ">#{loanRepayment},</if>
+            <if test="loanTerm!=null and loanID!='' ">#{loanTerm},</if>
+            <if test="loanType!=null and loanID!='' ">#{loanType},</if>
+            <if test="loanState!=null and loanID!='' ">#{loanState},</if>
+            <if test="loanPreliminary!=null and loanID!='' ">#{loanPreliminary},</if>
+            <if test="loanReview!=null and loanID!='' ">#{loanReview},</if>
+            <if test="preliminaryPersonnel!=null and loanID!='' ">#{preliminaryPersonnel},</if>
+            <if test="reviewPersonnel!=null and loanID!='' ">#{reviewPersonnel},</if>
+        </trim>
+    </insert>
+
+
+    <select id="selectLoanList" resultMap="BaseResultMap" parameterType="com.hz.manager.dto.AdminLoanDTO">
+     SELECT  *  FROM   base_admin_loan
+        <where>
+            <if test="loanName != null and loanName != '' ">
+                and loan_name LIKE '%' #{loanName} '%'
+            </if>
+            <if test="loanPhone != null and loanPhone != '' ">
+                and loan_phone  LIKE '%' #{loanPhone} '%'
+            </if>
+            <if test="loanType != null and loanType != '' ">
+                and loan_type  LIKE '%' #{loanType} '%'
+            </if>
+            <if test="startTime != null and startTime != '' ">
+                and loan_date_application &gt;  #{startTime}
+            </if>
+            <if test="endTime != null and endTime != '' ">
+                and loan_date_application &lt;  #{endTime}
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteLoan" parameterType="java.lang.String">
+        DELETE  FROM base_admin_loan WHERE  loan_phone=#{phone}
+    </delete>
+
+</mapper>

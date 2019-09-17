@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hz.loanbiz.mapper.SmsCodeMapper" >
+
+  <resultMap id="BaseResultMap" type="com.hz.loanbiz.model.SmsCode" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_mobile" property="userMobile" jdbcType="VARCHAR" />
+    <result column="biz_type" property="bizType" jdbcType="VARCHAR" />
+    <result column="sms_code" property="smsCode" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, user_mobile, biz_type, sms_code, create_date
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_sms_code
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <insert id="insert" parameterType="com.hz.loanbiz.model.SmsCode" >
+    insert into tb_sms_code (id, user_mobile, biz_type, 
+      sms_code, create_date)
+    values (#{id,jdbcType=BIGINT}, #{userMobile,jdbcType=VARCHAR}, #{bizType,jdbcType=VARCHAR}, 
+      #{smsCode,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP})
+  </insert>
+
+  <insert id="insertService"  parameterType="com.hz.loanbiz.model.SmsCode" >
+    insert into tb_sms_code
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userMobile != null" >
+        user_mobile,
+      </if>
+      <if test="bizType != null" >
+        biz_type,
+      </if>
+      <if test="smsCode != null" >
+        sms_code,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userMobile != null" >
+        #{userMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="bizType != null" >
+        #{bizType,jdbcType=VARCHAR},
+      </if>
+      <if test="smsCode != null" >
+        #{smsCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+    <!--根据手机号和业务类型查询验证码 -->
+    <select id="querySmsCodeByMobile" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from tb_sms_code
+        where user_mobile = #{mobile,jdbcType=VARCHAR}
+        and biz_type = #{bizType,jdbcType=VARCHAR}
+        order by create_date desc limit 0,1
+    </select>
+
+</mapper>
